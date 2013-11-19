@@ -35,7 +35,7 @@ class ClinicsListController < UIViewController
 
       json['clinic'].each do |clinic|
         @data[clinic['name'][0]] = [] if @data[clinic['name'][0]] == nil
-        @data[clinic['name'][0]] << [clinic['name'].capitalize, clinic['id']]
+        @data[clinic['name'][0]] << [clinic['name'].capitalize, clinic['id'], clinic['sector']]
       end
       
       @table.reloadData
@@ -51,22 +51,25 @@ class ClinicsListController < UIViewController
   
   
   def tableView(tableView, cellForRowAtIndexPath: indexPath)
-    @resourceIdentifier ||= "CELL_IDENTIFIER"
-    
-    cell = tableView.dequeueReusableCellWithIdentifier(@reuseIdentifier)
-    
-    cell = UITableViewCell.alloc.initWithStyle(
-      UITableViewCellStyleDefault,
-      reuseIdentifier: @reuseIdentifier
-    )
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
-    
-    cell ||= UITableViewCell.alloc.initWithStyle(
-      UITableViewCellStyleDefault,
-      reuseIdentifier:@reuseIdentifier
-    )
-    
-    cell.textLabel.text = row_for_index_path(indexPath)[0]
+    cell = UITableViewCell.alloc.init
+
+    @clinicNameLabel = UILabel.alloc.init
+    @clinicNameLabel.textAlignment = UITextAlignmentLeft
+    @clinicNameLabel.text = row_for_index_path(indexPath)[0]
+ 
+    @clinicSectorLabel = UILabel.alloc.init
+    @clinicSectorLabel.textAlignment = UITextAlignmentLeft
+    @clinicSectorLabel.font = UIFont.systemFontOfSize(12)
+    @clinicSectorLabel.text = "Sector: #{row_for_index_path(indexPath)[2].to_s}"
+    @clinicSectorLabel.textColor = UIColor.grayColor
+
+
+    @clinicNameLabel.frame = CGRectMake(cell.contentView.bounds.origin.x + 10, 5, 200, 25)
+    @clinicSectorLabel.frame = CGRectMake(cell.contentView.bounds.origin.x + 10, 25, 100, 15)
+ 
+    cell.contentView.addSubview(@clinicNameLabel)
+    cell.contentView.addSubview(@clinicSectorLabel)
+
     cell
   end
   
@@ -75,51 +78,7 @@ class ClinicsListController < UIViewController
   def tableView(tableView, didSelectRowAtIndexPath: indexPath)
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
     
-    controller = UIViewController.alloc.initWithNibName(nil, bundle: nil)
-    controller.view.backgroundColor = UIColor.whiteColor
-    controller.title = "Detalle: #{row_for_index_path(indexPath)[0].to_s}"
-
-    labels = {
-      'name' => UILabel.alloc.initWithFrame([[10, 220], [controller.view.frame.size.width, 0]]),
-      'address' => UILabel.alloc.initWithFrame([[10, 240], [controller.view.frame.size.width, 100]])
-    }
-
-    labels['name'].textColor = UIColor.blackColor
-    labels['address'].textColor = UIColor.grayColor
-
-
-    labels.each { |label, value|
-      value.lineBreakMode = UILineBreakModeWordWrap
-      value.numberOfLines = 0
-      value.textAlignment = NSTextAlignmentLeft
-    }
-
-
-    BubbleWrap::HTTP.get("#{@server_url}/ile-clinics.json") do |response|
-      json =  BubbleWrap::JSON.parse(response.body.to_s)
-
-      clinic_information =  json['clinic'][row_for_index_path(indexPath)[1].to_i - 1]
-
-      image_url =  clinic_information['picture'].nil? ? "#{@server_url}#{clinic_information['picture']}" :  "http://www.profem.com.mx/images/slideHome.jpg"
-
-      data = NSData.dataWithContentsOfURL(NSURL.URLWithString(image_url))
-      image = UIImageView.alloc.initWithFrame([[0, 35], [320, 199]])
-      image.contentMode = UIViewContentModeScaleAspectFit
-      image.image = UIImage.imageWithData(data)
-
-      controller.view.addSubview(image)
-
-      labels['name'].text = clinic_information['name']
-      labels['address'].text = clinic_information['address']
-
-
-      labels['name'].sizeToFit
-      # clinic_address.sizeToFit
-        
-    end
-    
-    controller.view.addSubview(labels['name'])
-    controller.view.addSubview(labels['address'])
+    controller = ClinicDetailController.new (row_for_index_path(indexPath), @server_url)
     
     self.navigationController.pushViewController(controller, animated: true)
     
