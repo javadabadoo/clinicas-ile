@@ -22,6 +22,12 @@ def viewDidLoad
       'address' => UILabel.alloc.initWithFrame([[10, 195], [self.view.frame.size.width, 100]])
     }
 
+
+    buttons = {
+      'rate' => UIButton.buttonWithType(UIButtonTypeRoundedRect),
+      'comments' => UIButton.buttonWithType(UIButtonTypeRoundedRect)
+    }
+
     labels['name'].textColor = UIColor.blackColor
     labels['address'].textColor = UIColor.grayColor
 
@@ -44,13 +50,32 @@ def viewDidLoad
       image.contentMode = UIViewContentModeScaleAspectFit
       image.image = UIImage.imageWithData(data)
 
-      self.view.addSubview(image)
-
       labels['name'].text = clinic_information['name']
       labels['address'].text = clinic_information['address']
 
-
       labels['name'].sizeToFit
+
+
+      buttons['rate'].setTitle("Calificar", forState: UIControlStateNormal)
+      buttons['comments'].setTitle("Comentarios", forState: UIControlStateNormal)
+      buttons['rate'].sizeToFit
+      buttons['comments'].sizeToFit
+
+      buttons['rate'].frame = CGRect.new (
+        [labels['name'].frame.origin.x, labels['address'].frame.origin.y + labels['address'].frame.size.height + 20],
+        buttons['rate'].frame.size
+      )
+
+      buttons['comments'].frame = CGRect.new (
+        [buttons['rate'].frame.origin.x + buttons['rate'].frame.size.width + 20, labels['address'].frame.origin.y + labels['address'].frame.size.height + 20],
+        buttons['comments'].frame.size
+      )
+
+
+      self.view.addSubview(image)
+      self.view.addSubview(buttons['rate'])
+      self.view.addSubview(buttons['comments'])
+
         
     end
     
