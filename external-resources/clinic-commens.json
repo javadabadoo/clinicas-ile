@@ -1,0 +1,36 @@
+{
+   "comments":[
+      {
+         "id": 1,
+         "user": "fulana_de_tal",
+         "title": "Existen irregularidades con los precios",
+         "category": "queja",
+         "rate": "1",
+         "text": "No respetan los precios de su lista que publican en su página de internet"
+      },
+      {
+         "id": 2,
+         "user": "mengana",
+         "title": "Buen servicio",
+         "category": "comentario",
+         "rate": "5",
+         "text": "Me gustó mucho la atención y orientación que ofrecen."
+      },
+      {
+         "id": 3,
+         "user": "chencha_rockstar",
+         "title": "Preferible contratar el servicio extendido",
+         "category": "tip",
+         "rate": "Público",
+         "text": "Recomiendo pagar el plus, son solo $500 mas por estancia extendida"
+      },
+      {
+         "id": 4,
+         "user": "el_novato",
+         "title": "¿Tienen algun plan de pagos?",
+         "category": "pregunta",
+         "rate": "Público",
+         "text": "Me pregunto si con ustedes puedo tener algun plan de pagos a plazos"
+      }
+   ]
+}
