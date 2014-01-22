@@ -1,4 +1,4 @@
-class ControllerInformation
+class JDDControllerInformation
   
   PROPERTIES = [
     :tag,

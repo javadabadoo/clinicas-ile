@@ -1,4 +1,4 @@
-class CommunityController < UIViewController
+class JDDCommunityController < UIViewController
   
   
   def viewDidLoad

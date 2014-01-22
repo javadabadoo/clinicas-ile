@@ -5,8 +5,8 @@ class AppDelegate
   def application(application, didFinishLaunchingWithOptions: launchOptions)
     
     controllersInformation = [
-      ControllerInformation.new(tag: 1,controllerClass: ClinicsListController, title: 'Clinicas Registradas', tabBarImage: 'hospital-icon.png'),
-      ControllerInformation.new(tag: 2,controllerClass: CommunityController, title: 'Comunidad', tabBarImage: 'Patients-icon.png')
+      JDDControllerInformation.new(tag: 1,controllerClass: JDDClinicsListController, title: 'Clinicas Registradas', tabBarImage: 'hospital-icon'),
+      JDDControllerInformation.new(tag: 2,controllerClass: JDDCommunityController, title: 'Comunidad', tabBarImage: 'Patients-icon')
     ]
     
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)

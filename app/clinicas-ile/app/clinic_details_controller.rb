@@ -1,32 +1,41 @@
 class ClinicDetailController < UIViewController
 
 
-attr_accessor :data
-attr_accessor :server_url
+  attr_accessor :data
+  attr_accessor :server_url
 
 
 
-def initialize (data, server_url)
-	@data = data
-	@server_url = server_url
-end
+  def initialize (data, server_url)
+  	@data = data
+  	@server_url = server_url
+  end
 
 
 
-def viewDidLoad
-	self.view.backgroundColor = UIColor.whiteColor
+  def viewDidLoad
+  	self.view.backgroundColor = UIColor.whiteColor
     self.title = "Detalle: #{@data[0].to_s}"
+
+    scrollView = UIScrollView.alloc.initWithFrame(CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height))
+    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height * 1.3)
+
+    rightButton = UIBarButtonItem.alloc.initWithTitle(
+        "Comentarios",
+        style: UIBarButtonItemStyleDone,
+        target: self,
+        action: 'show_comments'
+    )
+
+    self.navigationItem.rightBarButtonItem = rightButton;
+
+    self.view.addSubview(scrollView)
 
     labels = {
       'name' => UILabel.alloc.initWithFrame([[10, 170], [self.view.frame.size.width, 0]]),
       'address' => UILabel.alloc.initWithFrame([[10, 195], [self.view.frame.size.width, 100]])
     }
 
-
-    buttons = {
-      'rate' => UIButton.buttonWithType(UIButtonTypeRoundedRect),
-      'comments' => UIButton.buttonWithType(UIButtonTypeRoundedRect)
-    }
 
     labels['name'].textColor = UIColor.blackColor
     labels['address'].textColor = UIColor.grayColor
@@ -55,32 +64,33 @@ def viewDidLoad
 
       labels['name'].sizeToFit
 
-
-      buttons['rate'].setTitle("Calificar", forState: UIControlStateNormal)
-      buttons['comments'].setTitle("Comentarios", forState: UIControlStateNormal)
-      buttons['rate'].sizeToFit
-      buttons['comments'].sizeToFit
-
-      buttons['rate'].frame = CGRect.new (
-        [labels['name'].frame.origin.x, labels['address'].frame.origin.y + labels['address'].frame.size.height + 20],
-        buttons['rate'].frame.size
-      )
-
-      buttons['comments'].frame = CGRect.new (
-        [buttons['rate'].frame.origin.x + buttons['rate'].frame.size.width + 20, labels['address'].frame.origin.y + labels['address'].frame.size.height + 20],
-        buttons['comments'].frame.size
-      )
-
-
-      self.view.addSubview(image)
-      self.view.addSubview(buttons['rate'])
-      self.view.addSubview(buttons['comments'])
+      rate_view = JDDRateViewController.alloc.initWithFrame([[10, 390], [32 * 5, 32]])
+      rate_view.backgroundColor = UIColor.clearColor
+      rate_view.delegate = self
+      
+      scrollView.addSubview(image)
+      scrollView.addSubview(rate_view)
 
         
     end
     
-    self.view.addSubview(labels['name'])
-    self.view.addSubview(labels['address'])
-end
+    scrollView.addSubview(labels['name'])
+    scrollView.addSubview(labels['address'])
+  end
+
+
+
+
+  def jdd_rating_clicked(star_tapped)
+    p "calificando con #{star_tapped} estrellas"
+  end
+
+
+
+  def show_comments
+    controller = JDDCommentsViewController.new
+    self.navigationController.pushViewController(controller, animated: true)
+    controller
+  end
 
 end

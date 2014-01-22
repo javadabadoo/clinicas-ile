@@ -1,4 +1,4 @@
-class ClinicsListController < UIViewController
+class JDDClinicsListController < UIViewController
   
 
   attr_accessor :server_url
@@ -27,8 +27,6 @@ class ClinicsListController < UIViewController
   def getExternalInformation
     
     @data = {}
-
-    p "#{@server_url}/datos.json"
     
     BubbleWrap::HTTP.get("#{@server_url}/ile-clinics.json") do |response|
       json =  BubbleWrap::JSON.parse(response.body.to_s)
@@ -51,24 +49,31 @@ class ClinicsListController < UIViewController
   
   
   def tableView(tableView, cellForRowAtIndexPath: indexPath)
-    cell = UITableViewCell.alloc.init
+    @reuseIdentifier ||= "ILE_CLINICS_TABLE"
+    cell = tableView.dequeueReusableCellWithIdentifier(@reuseIdentifier)
+    cell ||= UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier: @reuseIdentifier)
 
-    @clinicNameLabel = UILabel.alloc.init
-    @clinicNameLabel.textAlignment = UITextAlignmentLeft
-    @clinicNameLabel.text = row_for_index_path(indexPath)[0]
- 
-    @clinicSectorLabel = UILabel.alloc.init
-    @clinicSectorLabel.textAlignment = UITextAlignmentLeft
-    @clinicSectorLabel.font = UIFont.systemFontOfSize(12)
-    @clinicSectorLabel.text = "Sector: #{row_for_index_path(indexPath)[2].to_s}"
-    @clinicSectorLabel.textColor = UIColor.grayColor
+    clinicNameLabel = cell.contentView.subviews[0]
+    clinicSectorLabel = cell.contentView.subviews[1]
 
+    if clinicNameLabel == nil
+      clinicNameLabel = UILabel.alloc.init
+      clinicNameLabel.textAlignment = UITextAlignmentLeft
+      clinicNameLabel.text = row_for_index_path(indexPath)[0]
+      clinicNameLabel.frame = CGRectMake(cell.contentView.bounds.origin.x + 10, 5, cell.contentView.frame.size.width - 20, 25)
+    end
+    
+    if clinicSectorLabel == nil
+      clinicSectorLabel = UILabel.alloc.init
+      clinicSectorLabel.textAlignment = UITextAlignmentLeft
+      clinicSectorLabel.font = UIFont.systemFontOfSize(12)
+      clinicSectorLabel.text = "Sector: #{row_for_index_path(indexPath)[2].to_s}"
+      clinicSectorLabel.textColor = UIColor.grayColor
+      clinicSectorLabel.frame = CGRectMake(cell.contentView.bounds.origin.x + 10, 25, 100, 15)
+    end
 
-    @clinicNameLabel.frame = CGRectMake(cell.contentView.bounds.origin.x + 10, 5, 200, 25)
-    @clinicSectorLabel.frame = CGRectMake(cell.contentView.bounds.origin.x + 10, 25, 100, 15)
- 
-    cell.contentView.addSubview(@clinicNameLabel)
-    cell.contentView.addSubview(@clinicSectorLabel)
+    cell.contentView.addSubview(clinicNameLabel)
+    cell.contentView.addSubview(clinicSectorLabel)
 
     cell
   end
