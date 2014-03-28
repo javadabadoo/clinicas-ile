@@ -36,6 +36,10 @@ class ClinicDetailController < UIViewController
       'address' => UILabel.alloc.initWithFrame([[10, 195], [self.view.frame.size.width, 100]])
     }
 
+    buttons = {
+        'show_location' => UIButton.buttonWithType(UIButtonTypeRoundedRect)
+    }
+
 
     labels['name'].textColor = UIColor.blackColor
     labels['address'].textColor = UIColor.grayColor
@@ -64,12 +68,17 @@ class ClinicDetailController < UIViewController
 
       labels['name'].sizeToFit
 
+      buttons['show_location'].frame = [[10,350],[200,35]]
+      buttons['show_location'].setTitle("Ver ubicación", forState: UIControlStateNormal)
+      buttons['show_location'].addTarget(self, action: 'show_location', forControlEvents:UIControlEventTouchUpInside)
+
       rate_view = JDDRateViewController.alloc.initWithFrame([[10, 390], [32 * 5, 32]])
       rate_view.backgroundColor = UIColor.clearColor
       rate_view.delegate = self
       
       scrollView.addSubview(image)
       scrollView.addSubview(rate_view)
+      scrollView.addSubview(buttons['show_location'])
 
         
     end
@@ -89,6 +98,14 @@ class ClinicDetailController < UIViewController
 
   def show_comments
     controller = JDDCommentsViewController.new
+    self.navigationController.pushViewController(controller, animated: true)
+    controller
+  end
+
+
+
+  def show_location
+    controller = ClinicLocationViewController.alloc.init
     self.navigationController.pushViewController(controller, animated: true)
     controller
   end

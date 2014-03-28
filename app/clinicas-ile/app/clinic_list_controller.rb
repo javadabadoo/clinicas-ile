@@ -17,6 +17,8 @@ class JDDClinicsListController < UIViewController
     
     @table.dataSource = self
     @table.delegate = self
+
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent
     
     getExternalInformation
     
@@ -84,7 +86,7 @@ class JDDClinicsListController < UIViewController
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
     
     controller = ClinicDetailController.new (row_for_index_path(indexPath), @server_url)
-    
+
     self.navigationController.pushViewController(controller, animated: true)
     
   end
